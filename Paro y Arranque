@@ -1,0 +1,53 @@
+const int motorPin1 = 11;       // Pin para el primer motor
+const int motorPin2 = 10;      // Pin para el segundo motor
+const int ledPin1 = 13;        // Pin para el primer LED
+const int ledPin2 = 12;        // Pin para el segundo LED
+const int switchPin1 = 2;      // Pin para el primer interruptor
+const int switchPin2 = 3;      // Pin para el segundo interruptor
+
+bool estadoSwitch1 = false;     // Variable para el estado del primer interruptor
+bool estadoSwitch2 = false;     // Variable para el estado del segundo interruptor
+
+
+void setup() {
+  pinMode(motorPin1, OUTPUT);   // Configura el pin del primer motor como salida
+  pinMode(motorPin2, OUTPUT);   // Configura el pin del segundo motor como salida
+  pinMode(ledPin1, OUTPUT);     // Configura el pin del primer LED como salida
+  pinMode(ledPin2, OUTPUT);     // Configura el pin del segundo LED como salida
+  pinMode(switchPin1, INPUT_PULLUP); // Configura el pin del primer interruptor como entrada con pull-up
+  pinMode(switchPin2, INPUT_PULLUP); // Configura el pin del segundo interruptor como entrada con pull-up
+}
+
+void loop() {
+  // Control del primer interruptor y motor
+  if (digitalRead(switchPin1) == LOW) {
+    delay(50);  // Espera un breve momento para evitar rebotes
+    if (digitalRead(switchPin1) == LOW) {
+      estadoSwitch1 = !estadoSwitch1;  // Cambia el estado del primer interruptor
+      estadoSwitch2 = false;  // Asegura que el segundo interruptor esté apagado
+      digitalWrite(motorPin1, estadoSwitch1 ? HIGH : LOW);  // Enciende o apaga el primer motor
+      digitalWrite(motorPin2, LOW);  // Asegura que el segundo motor esté apagado
+      digitalWrite(ledPin1, estadoSwitch1 ? HIGH : LOW);  // Enciende o apaga el primer LED
+      digitalWrite(ledPin2, LOW);  // Asegura que el segundo LED esté apagado
+    }
+    while (digitalRead(switchPin1) == LOW) {
+      delay(10);  // Espera a que se suelte el primer interruptor
+    }
+  }
+
+  // Control del segundo interruptor y motor
+  if (digitalRead(switchPin2) == LOW) {
+    delay(50);  // Espera un breve momento para evitar rebotes
+    if (digitalRead(switchPin2) == LOW) {
+      estadoSwitch2 = !estadoSwitch2;  // Cambia el estado del segundo interruptor
+      estadoSwitch1 = false;  // Asegura que el primer interruptor esté apagado
+      digitalWrite(motorPin2, estadoSwitch2 ? HIGH : LOW);  // Enciende o apaga el segundo motor
+      digitalWrite(motorPin1, LOW);  // Asegura que el primer motor esté apagado
+      digitalWrite(ledPin2, estadoSwitch2 ? HIGH : LOW);  // Enciende o apaga el segundo LED
+      digitalWrite(ledPin1, LOW);  // Asegura que el primer LED esté apagado
+    }
+    while (digitalRead(switchPin2) == LOW) {
+      delay(10);  // Espera a que se suelte el segundo interruptor
+    }
+  }
+}
